@@ -1,7 +1,7 @@
 ---
 name: Proposal discussion
 about: Issue to discuss a rule proposal or a rule where the details have to be discussed
-title: "[Rule title]"
+title: "[Category] | [Rule title]"
 labels: discussion
 assignees: ''
 
