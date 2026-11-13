@@ -149,7 +149,7 @@ Bad:
 ```sql
 SELECT
     students.full_name,
-    courses.course_name
+    courses.name AS course_name
 FROM students
 INNER JOIN enrolments ON students.id = enrolments.student_id AND students.cohort = enrolments.cohort
 INNER JOIN courses ON enrolments.course_id = courses.id
@@ -159,7 +159,7 @@ Good:
 ```sql
 SELECT
     students.full_name,
-    courses.course_name
+    courses.name AS course_name
 FROM students
 INNER JOIN enrolments 
     ON students.id = enrolments.student_id
