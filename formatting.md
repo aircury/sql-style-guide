@@ -325,25 +325,15 @@ WHERE cohort IN (2023, 2024)
  - **Against (0)**
  - **Not mentioned (6)**: Holywell, Celko, PG.ai, Mozilla, GitLab, Supabase.
 
-## *Proposal*  Put `AND` / `OR` at the beginning of the next line
+## Put `AND` / `OR` at the beginning of the next line
 
-In a `WHERE`, `HAVING`, or `ON` clause with multiple conditions, place `AND` and `OR` at the **beginning** of the next line rather than at the end of the current one.
+In a `WHERE`, `HAVING`, or `ON` clause with multiple conditions, place `AND` and `OR` at the **beginning** of the next line rather than at the end of the current one. The operators keep the same indentation as the first condition.
 
-Placing boolean operators at the start of the line makes conditions easier to scan, as each condition begins with a clear logical marker, and the boundary between conditions is immediately visible.
+Placing boolean operators at the start of the line makes conditions easier to scan, as each condition begins with a clear logical marker, and the boundary between conditions is immediately visible. It also keeps diffs small: adding, removing or commenting out a condition touches only its own line.
 
 ##### Example
 
-Beginning of next line:
-```sql
-SELECT *
-FROM students
-WHERE 
-    cohort > 2024
-    AND is_active IS true
-    AND school_urn IS NOT NULL
-```
-
-End of line:
+Bad:
 ```sql
 SELECT *
 FROM students
@@ -351,6 +341,16 @@ WHERE
     cohort > 2024 AND
     is_active IS true AND
     school_urn IS NOT NULL
+```
+
+Good:
+```sql
+SELECT *
+FROM students
+WHERE 
+    cohort > 2024
+    AND is_active IS true
+    AND school_urn IS NOT NULL
 ```
 
 #### Source breakdown
