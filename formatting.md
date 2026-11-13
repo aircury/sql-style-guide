@@ -1,18 +1,14 @@
 # Formatting
 
-For all this rules, be mindful that if the **river** alignment described below if finally chosen, the rest of the rules of this section will need to be changed, as they only make sense when using left-aligned keywords.
+## Left align all keywords, starting on the same character boundary
 
-## *Proposal* Left align all keywords, starting on the same character boundary
+Align all clause keywords to the same left margin instead of right-aligning them to a common boundary (**river** alignment).
 
-There are two major positions on keyword alignment: **river** and **left-aligned**. Throughout the guide, all the examples have been using the latter.
-
-Arguments in favor of aligning keywords to the left are that they all start at the same left margin, which is simpler to write and maintain. No padding arithmetic is needed, and adding a longer keyword (switching `JOIN` to `INNER JOIN`, for example) does not force re-alignment of everything else on the page. It also works without editor tooling, which makes it easier to enforce consistently across a team.
-
-The river argument is as follows: Right-aligning keywords to a common boundary creates a visual separation between structure and data, as the eye can scan keywords in one vertical sweep down the left channel, and implementation detail sits cleanly to the right. Arguments naturally fall into alignment under each other without extra rules.
+Left-aligned keywords are simpler to write and maintain. No padding arithmetic is needed, and adding a longer keyword (switching `JOIN` to `INNER JOIN`, for example) does not force re-alignment of everything else on the page. It also works without editor tooling, which makes it easier to enforce consistently across a team.
 
 ##### Example
 
-River:
+Bad:
 ```sql
 SELECT full_name,
        email,
@@ -21,7 +17,7 @@ SELECT full_name,
  WHERE school_urn = '02352'
 ```
 
-Left-align:
+Good:
 ```sql
 SELECT 
     full_name,
