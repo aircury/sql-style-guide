@@ -92,13 +92,13 @@ FROM students
  - **Against (0)**
  - **Not mentioned (7)**: PostgreSQL, Mozilla, GitLab, PG.ai, Brooklyn, Mazur, Supabase.
 
-## *Proposal* Use lowercase for functions
+## Use lowercase for functions
 
-Treat functions as identifiers. This implies writing them in lower case: `count()` instead of `COUNT()`.
+Treat functions as identifiers and always write them in **lowercase**: `count()` instead of `COUNT()`.
 
-Right now, people use lowercase and uppercase for functions. From what I have seen, most of the single-worded functions are written in uppercase (`COALESCE`, `SUM`, ...), whereas multi-worded and more 'complex' ones are written in lowercase (`string_agg`, `json_array_elements`). This makes function declaration inconsistent format-wise.
+Mixing cases is common: single-word functions tend to be written in uppercase (`COALESCE`, `SUM`, ...), while multi-word ones are written in lowercase (`string_agg`, `json_array_elements`). Always using lowercase removes that inconsistency.
 
-My proposal is to always use **lowercase** for functions. The [Bouma](https://en.wikipedia.org/wiki/Bouma) (kind of the 'shape') of uppercase words is a rectangle, making easy for our eyes to distinguish it from regular words. Using uppercase for the reserved words and the functions may hinder the readability of a query. An opposite argument could be made for the contrary statement (using uppercase for functions) using the same reasoning: it will make it easier for the developers to distinguish column names and aliases from column transformations.
+It also keeps uppercase meaningful. The [Bouma](https://en.wikipedia.org/wiki/Bouma) (the outline shape) of an uppercase word is a rectangle, which makes it stand out from regular words. Reserving uppercase for reserved words keeps the structure of the query easy to see; using it for functions too dilutes that.
 
 ##### Example
 
