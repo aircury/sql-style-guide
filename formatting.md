@@ -139,11 +139,9 @@ WHERE cohort > 2024
  - **For 2 spaces (1)**: GitLab.
  - **Not mentioned (6)**: Celko, PostgreSQL, PG.ai, Mozilla, Mazur, Supabase.
 
-## *Details to discuss* Place `JOIN` conditions below the keyword
+## Place `JOIN` conditions below the keyword
 
-When joining tables, place the `ON` / `USING` keyword on a new line, indented one level under the `JOIN` keyword. This clearly separates the join condition from the join declaration and makes it easier to identify at a glance.
-
-An alternative, adopted by Brooklyn and Mazur, is to place a single join condition directly on the same line as the `JOIN` keyword, and to only move to separate lines when there are multiple conditions.
+When joining tables, place the `ON` keyword on a new line, indented one level under the `JOIN` keyword, even when there is a single condition. This clearly separates the join condition from the join declaration and makes it easier to identify at a glance.
 
 ##### Example
 
@@ -168,18 +166,6 @@ INNER JOIN enrolments
     AND students.cohort = enrolments.cohort
 INNER JOIN courses 
     ON enrolments.course_id = courses.id
-```
-
-Good (single condition):
-```sql
-SELECT
-    students.full_name,
-    courses.course_name
-FROM students
-INNER JOIN enrolments 
-    ON students.id = enrolments.student_id
-    AND students.cohort = enrolments.cohort
-INNER JOIN courses ON enrolments.course_id = courses.id
 ```
 
 #### Source breakdown
