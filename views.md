@@ -40,7 +40,7 @@ Do not create views as a default abstraction layer. Each view should exist becau
 
 Bad:
 ```sql
--- A view that just mirrors the base table with no added value
+/* A view that just mirrors the base table with no added value */
 CREATE VIEW students_view AS
 SELECT
     id,
@@ -53,7 +53,7 @@ FROM students
 
 Good:
 ```sql
--- A view that encapsulates a meaningful, reusable definition
+/* A view that encapsulates a meaningful, reusable definition */
 CREATE VIEW active_students_with_school AS
 SELECT
     students.id,
