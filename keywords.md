@@ -128,25 +128,15 @@ GROUP BY school_urn
  - **Against (3)**: GitLab, Holywell, Celko.
  - **Not mentioned (1)**: PostgreSQL.
 
-## *Proposal* Use lowercase for data types
+## Use uppercase for data types
 
-Similarly to the functions, there is currently a mix of lowercase and uppercase when using data type casting and for table definitions. Either uppercase or lowercase should be chosen.
+Data types are written in **UPPERCASE**, the same as reserved words, both in table definitions and in type casts. Mixing cases makes definitions inconsistent, so pick one and stick to it.
 
-The proposal of using **lowercase** is based on consistency between all rules (using uppercase only for reserved words), and is more in line with more recent guides and trends.
+User-defined types (enums, domains, composite types) are identifiers rather than reserved words, so they follow the naming rules instead: lowercase, with underscores.
 
-##### Example 
+##### Example
 
 Bad:
-```sql
-CREATE TABLE users (
-    id         INTEGER      PRIMARY KEY,
-    email      VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    is_active  BOOLEAN      NOT NULL
-)
-```
-
-Good:
 ```sql
 CREATE TABLE users (
     id         integer      PRIMARY KEY,
@@ -156,8 +146,18 @@ CREATE TABLE users (
 )
 ```
 
+Good:
+```sql
+CREATE TABLE users (
+    id         INTEGER      PRIMARY KEY,
+    email      VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    is_active  BOOLEAN      NOT NULL
+)
+```
+
 #### Source breakdown
 
- - **For (5)**: PG.ai, Brooklyn, Mazur, Supabase, PostgreSQL.
- - **Against (3)**: GitLab, Holywell, Celko.
+ - **For (3)**: GitLab, Holywell, Celko.
+ - **Against (5)**: PG.ai, Brooklyn, Mazur, Supabase, PostgreSQL.
  - **Not mentioned (1)**: Mozilla.
