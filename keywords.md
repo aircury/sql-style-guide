@@ -40,20 +40,20 @@ Bad:
 ```sql
 SELECT
     *
-FROM schools sc
-JOIN students st
-    ON sc.urn = st.school_urn
-WHERE cohort > 2024
+FROM schools
+JOIN students
+    ON schools.urn = students.school_urn
+WHERE students.cohort > 2024
 ``` 
 
 Good:
 ```sql
 SELECT
     *
-FROM schools sc
-INNER JOIN students st
-    ON sc.urn = st.school_urn
-WHERE cohort > 2024
+FROM schools
+INNER JOIN students
+    ON schools.urn = students.school_urn
+WHERE students.cohort > 2024
 ```
 
 #### Source breakdown

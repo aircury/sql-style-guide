@@ -47,25 +47,25 @@ Vague identifiers is the only thing not all guides are in favor of removing, and
 Bad:
 ```sql
 SELECT
-    e.pid,
-    e.created_at,
-    c.date_creation,
-    c.cohort
-FROM enrolments AS e
-INNER JOIN tbl_courses AS c
-    ON e.course_id = c.id	
+    enrolments.pid,
+    enrolments.created_at,
+    tbl_courses.date_creation,
+    tbl_courses.cohort
+FROM enrolments
+INNER JOIN tbl_courses
+    ON enrolments.course_id = tbl_courses.id	
 ```
 
 Good:
 ```sql
 SELECT
-    e.participant_id,
-    e.created_at AS enrolment_created_at,
-    c.created_at AS course_created_at,
-    c.cohort
-FROM enrolments AS e
-INNER JOIN courses AS c
-    ON e.course_id = c.id	
+    enrolments.participant_id,
+    enrolments.created_at AS enrolment_created_at,
+    courses.created_at    AS course_created_at,
+    courses.cohort
+FROM enrolments
+INNER JOIN courses
+    ON enrolments.course_id = courses.id	
 ```
 
 #### Source breakdown

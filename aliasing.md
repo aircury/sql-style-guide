@@ -9,23 +9,23 @@ Never omit the keyword when aliasing, as it provides readability.
 Bad:
 ```sql
 SELECT
-    s.full_name                     student_name,
-    coalesce(count(e.course_id), 0) AS total_enrolments
-FROM students AS s
-LEFT JOIN enrolments e
-    ON s.id = e.student_id
-GROUP BY s.full_name
+    students.full_name                       student_name,
+    coalesce(count(enrolments.course_id), 0) total_enrolments
+FROM students
+LEFT JOIN student_course_enrolments enrolments
+    ON students.id = enrolments.student_id
+GROUP BY students.full_name
 ```
 
 Good:
 ```sql
 SELECT
-    s.full_name                     AS student_name,
-    coalesce(count(e.course_id), 0) AS total_enrolments
-FROM students AS s
-LEFT JOIN enrolments AS e
-    ON s.id = e.student_id
-GROUP BY s.full_name
+    students.full_name                       AS student_name,
+    coalesce(count(enrolments.course_id), 0) AS total_enrolments
+FROM students
+LEFT JOIN student_course_enrolments AS enrolments
+    ON students.id = enrolments.student_id
+GROUP BY students.full_name
 ```
 
 #### Source breakdown
@@ -66,19 +66,17 @@ GROUP BY cohort_name
  - **Against (0)**
  - **Not mentioned (5)**: GitLab, Mozilla, Supabase, PG.ai, PostgreSQL.
 
-## *Proposal* Aim for clarity in table aliasing
+## Aim for clarity in table aliasing
 
-Prefer using the full table name over an alias when the name is short enough to be readable. When aliasing is unavoidable (long or ambiguous names, self-joins), use a meaningful alias rather than an abbreviation.
+Prefer using the full table name over an alias when the name is short enough to be readable. When aliasing is unavoidable (long or ambiguous names, self-joins), use a meaningful alias rather than an abbreviation or the initials of the table words (`schools`, not `s`; `districts`, not `sda`).
 
-Regarding what "short" means, there are different postures in the sources that are in favor of not aliasing: it ranges from less that 20 characters to less than 3 words. Those source argue that short table names and meaningful aliases improve query readability (for example, `schools` is more readable than `s`).
+In a long query, an abbreviation forces the reader to scroll back to the `FROM` or `JOIN` clause to remember which table it stands for. A meaningful name identifies the table anywhere in the query, and makes the business logic easier to follow for developers new to the codebase.
 
-Other sources argue that keeping table names and big aliases increase visual noise across longer queries, especially with joins. They argue for using short, abbreviated aliases or the initials of the table words (for example, `ec` aliases `external_courses`).  Both positions are arguing from readability, but they just weigh verbosity versus brevity differently.
-
-The only consensus is that table aliases should never be generic characters that convey no meaning, such as `x`, `t1`, ...
+Never use generic aliases that convey no meaning, such as `x` or `t1`.
 
 ##### Example
 
-If we want to avoid short table aliasing and abbreviation aliases, this is the *bad* example. If we argue the contrary, this is the *good* example:
+Bad:
 ```sql
 SELECT
     s.name      AS school_name,
@@ -89,7 +87,7 @@ INNER JOIN school_district_areas AS sda
     ON s.district_code = sda.code
 ```
 
-This would be the *good* example for the first position, and the *bad* one if always using aliases is the preferred rule:
+Good:
 ```sql
 SELECT
     schools.name      AS school_name,
