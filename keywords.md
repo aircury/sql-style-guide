@@ -72,7 +72,7 @@ Bad:
 ```sql
 SELECT 
     full_name, 
-    -- Specific to PostgreSQL
+    /* Specific to PostgreSQL */
     date_part('year', enrolment_date) AS enrolment_year
 FROM students
 ```
@@ -81,7 +81,7 @@ Good:
 ```sql
 SELECT 
     full_name,
-    -- ANSI SQL function
+    /* ANSI SQL function */
     extract(YEAR FROM enrolment_date) AS enrolment_year
 FROM students
 ```
