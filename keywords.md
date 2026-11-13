@@ -1,6 +1,6 @@
 # Keyword rules
 
-## *Proposal* Use uppercase for reserved words
+## Use uppercase for reserved words
 
 Always use **UPPERCASE** for reserved words (`SELECT`, `WHERE`, `AS`, ...). This differentiates the SQL logic from the tables and columns used in the queries and table definitions.
 
