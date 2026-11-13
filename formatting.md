@@ -109,26 +109,26 @@ Regarding multiple arguments each on their own line, including the first:
  - **Against (2)**: Holywell, Celko (the river pattern places the first argument on the same line as the keyword).
  - **Not mentioned (3)**: PostgreSQL, GitLab, Supabase.
 
-## *Proposal* Use 4 spaces for indentation
+## Use 4 spaces for indentation
 
-Use **4 spaces** for each level of indentation. This is the most common choice among the sources consulted, providing enough visual separation to clearly distinguish nested levels without excessive horizontal growth. There is, however, an argument to use **2 spaces** instead, as it gives enough visual separation while keeping the query less horizontal when complex operations are needed.
+Use **4 spaces** for each level of indentation. This is the most common choice among the sources consulted, providing enough visual separation to clearly distinguish nested levels without excessive horizontal growth.
 
 ##### Example
 
-4 spaces:
-```sql
-SELECT
-    full_name,
-    email
-FROM students
-WHERE cohort > 2024
-```
-
-2 spaces:
+Bad:
 ```sql
 SELECT
   full_name,
   email
+FROM students
+WHERE cohort > 2024
+```
+
+Good:
+```sql
+SELECT
+    full_name,
+    email
 FROM students
 WHERE cohort > 2024
 ```
