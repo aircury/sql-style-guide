@@ -160,11 +160,11 @@ FROM student_scores
  - **Against (0)**
  - **Not mentioned (6)**: Holywell, Celko, PostgreSQL, PG.ai, Mozilla, Mazur.
 
-## *Details to discuss* CTE names should be descriptive
+## CTE and subquery names should be descriptive
 
-CTE names should clearly convey what the CTE produces. Prefer names that read like a noun phrase describing the result set  (like `active_students`) rather than abbreviations or vague labels like `data` or `tmp`.
+CTE names should clearly convey what the CTE produces. Prefer names that read like a noun phrase describing the result set  (like `active_students`) rather than abbreviations or vague labels like `data` or `tmp`. Make names as long as they need to be to stay unambiguous, without padding them with unnecessary words.
 
-While some sources argue for names that are as verbose as needed to be unambiguous, other argues for conciseness: names should be clear but not padded with unnecessary words. Both agree that clarity is the goal: they differ on where to draw the line between informative and verbose.
+The same applies to subquery aliases, for example a subquery in a `JOIN` or `FROM` clause.
 
 ##### Example
 
@@ -196,6 +196,38 @@ completed_enrolments AS (
 student_pass_rates AS (
 ...
 )
+```
+
+Bad (subquery):
+```sql
+SELECT
+    students.full_name,
+    sq.total_courses
+FROM students
+INNER JOIN (
+    SELECT
+        student_id,
+        count(course_id) AS total_courses
+    FROM enrolments
+    GROUP BY student_id
+) AS sq
+    ON students.id = sq.student_id
+```
+
+Good (subquery):
+```sql
+SELECT
+    students.full_name,
+    student_course_counts.total_courses
+FROM students
+INNER JOIN (
+    SELECT
+        student_id,
+        count(course_id) AS total_courses
+    FROM enrolments
+    GROUP BY student_id
+) AS student_course_counts
+    ON students.id = student_course_counts.student_id
 ```
 
 #### Source breakdown
