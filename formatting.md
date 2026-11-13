@@ -462,9 +462,40 @@ FROM students
  - **For leading commas (1)**: Brooklyn.
  - **Not mentioned (4)**: Holywell, PostgreSQL, GitLab, Supabase.
 
-## *Details to discuss* Set a line length limit
+## Keep lines under 120 characters
 
-Lines should not exceed a set character limit to improve readability in side-by-side views, code reviews, and editors with limited width. There is no consensus on the exact threshold, but it ranges between 80 and 120 characters.
+Lines should not exceed **120 characters**, to keep queries readable in side-by-side views, code reviews, and editors with limited width. The limit is deliberately generous: in queries with several levels of subqueries, indentation alone takes up a good part of the line. Treat it as a ceiling, not a target.
+
+When a line goes over the limit, wrap the expression in parentheses. Break the line after the opening parenthesis, indent the content one level, and put the closing parenthesis on its own line, aligned with the line that opened it. Inside, break at logical points such as before an operator or after a comma, starting each line with the operator in the same way as `AND` / `OR`. The parentheses group the expression into one visible block, with a clear start and end.
+
+Function calls already have their own parentheses, so break inside those instead (see [Terminate the line after an open parenthesis](#terminate-the-line-after-an-open-parenthesis)). If an expression is still hard to read after breaking it, move it into a CTE.
+
+##### Example
+
+Bad:
+```sql
+SELECT
+    students.full_name,
+    assessments.exam_score * 0.5 + assessments.coursework_score * 0.3 + assessments.attendance_score * 0.15 + assessments.participation_score * 0.05 AS final_grade
+FROM students
+INNER JOIN assessments
+    ON students.id = assessments.student_id
+```
+
+Good:
+```sql
+SELECT
+    students.full_name,
+    (
+        assessments.exam_score * 0.5
+        + assessments.coursework_score * 0.3
+        + assessments.attendance_score * 0.15
+        + assessments.participation_score * 0.05
+    ) AS final_grade
+FROM students
+INNER JOIN assessments
+    ON students.id = assessments.student_id
+```
 
 #### Source breakdown
 

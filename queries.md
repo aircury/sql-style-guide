@@ -493,6 +493,8 @@ WHERE school_id IN (
 
 Do not add parentheses around expressions that do not require them. Extra parentheses suggest a precedence concern where there is none, and add visual noise that makes expressions harder to read.
 
+The only exception is grouping an expression that is too long for one line and has to span several (see [Keep lines under 120 characters](formatting.md#keep-lines-under-120-characters)).
+
 ##### Example
 
 Bad:
