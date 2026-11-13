@@ -176,7 +176,7 @@ CREATE TABLE merges (...)
  - **Against (0)**
  - **Not mentioned (6)**: Holywell, Celko, PostgreSQL, PG.ai, Mozilla, Mazur.
 
-## *Proposal* Use collective, class or plural nouns for tables
+## Use collective, class or plural nouns for tables
 
 The core reasoning behind this rule is that tables hold many rows, and each row represents one entity of something, so the table name should reflect its plural nature. Use collective nouns if possible (for example, `staff` over `employees`). Otherwise, use plural nouns.
 
