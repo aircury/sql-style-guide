@@ -264,13 +264,11 @@ GROUP BY student_id
  - **Against (0)**
  - **Not mentioned (8)**: Holywell, Celko, PostgreSQL, PG.ai, Mozilla, GitLab, Mazur, Supabase.
 
-## *Proposal* Always use explicit column names in `GROUP BY`
+## Always use explicit column names in `GROUP BY`
 
 Use column names rather than positional numbers in `GROUP BY` clauses. Positional references (`GROUP BY 1, 2`) are fragile, as reordering the `SELECT` list silently changes what is being grouped without any error.
 
-Some consider positional references acceptable when the expression being grouped is complex or repeated verbatim in the `SELECT` list, to avoid duplication. 
-
-What is a consensus between the sources is to never mix positional references with column names in the same `GROUP BY` clause.
+For complex expressions, alias them in the `SELECT` list and group by the alias (see [lateral column aliasing](#use-lateral-column-aliasing-when-grouping-by-name)) instead of using a positional reference.
 
 ##### Example
 
