@@ -108,22 +108,22 @@ Use only lowercase alphanumeric characters for names separated by underscores, b
 Bad:
 ```sql
 CREATE TABLE "Enrolments" (
-    1st_grade     numeric(4,2),
-    student__name varchar,
-    course_id_    integer,
-    "Is Active"   boolean,
-    createdat     timestamp
+    1st_grade     NUMERIC(4,2),
+    student__name VARCHAR,
+    course_id_    INTEGER,
+    "Is Active"   BOOLEAN,
+    createdat     TIMESTAMP
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE enrolments (
-    final_grade  numeric(4,2),
-    student_name varchar,
-    course_id    integer,
-    is_active    boolean,
-    created_at   timestamp
+    final_grade  NUMERIC(4,2),
+    student_name VARCHAR,
+    course_id    INTEGER,
+    is_active    BOOLEAN,
+    created_at   TIMESTAMP
 )
 ```
 
@@ -153,10 +153,10 @@ Never use words such as `sum`, `count`, ... It will have to be quoted everywhere
 Bad:
 ```sql
 CREATE TABLE students (
-    id         integer PRIMARY KEY,
-    first_name varchar,
-    last_name  varchar,
-    group      varchar
+    id         INTEGER PRIMARY KEY,
+    first_name VARCHAR,
+    last_name  VARCHAR,
+    group      VARCHAR
 )
 ...
 CREATE TABLE union (...)
@@ -165,10 +165,10 @@ CREATE TABLE union (...)
 Good:
 ```sql
 CREATE TABLE students (
-    id          integer PRIMARY KEY,
-    first_name  varchar,
-    last_name   varchar,
-    cohort_name varchar
+    id          INTEGER PRIMARY KEY,
+    first_name  VARCHAR,
+    last_name   VARCHAR,
+    cohort_name VARCHAR
 )
 ...
 CREATE TABLE merges (...)
@@ -234,25 +234,25 @@ CREATE TABLE residences (...);
 
 ### Use singular names for columns
 
-A column holds one value per row, so using singular reflects that. An exception can be made for `array` or `json` columns, but those should be avoided where possible.
+A column holds one value per row, so using singular reflects that. An exception can be made for `ARRAY` or `JSON` columns, but those should be avoided where possible.
 
 ##### Example
 
 Bad:
 ```sql
 CREATE TABLE students (
-    id        integer PRIMARY KEY, 
-    full_name varchar,
-    absences  integer
+    id        INTEGER PRIMARY KEY, 
+    full_name VARCHAR,
+    absences  INTEGER
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE students (
-    id            integer PRIMARY KEY, 
-    full_name     varchar,
-    absence_count integer
+    id            INTEGER PRIMARY KEY, 
+    full_name     VARCHAR,
+    absence_count INTEGER
 )
 ```
 
@@ -327,18 +327,18 @@ Do not duplicate the table name in column name. This means two different things:
 Bad:
 ```sql
 CREATE TABLE grades (
-    id           integer PRIMARY KEY,
-    grade        numeric(3,1),
-    grade_letter varchar(1)
+    id           INTEGER PRIMARY KEY,
+    grade        NUMERIC(3,1),
+    grade_letter VARCHAR(1)
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE grades (
-    id     integer PRIMARY KEY,
-    score  numeric(3,1),
-    letter varchar(1)
+    id     INTEGER PRIMARY KEY,
+    score  NUMERIC(3,1),
+    letter VARCHAR(1)
 )
 ```
 
