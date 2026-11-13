@@ -1,6 +1,6 @@
 # Keyword rules
 
-## *Proposal* Use uppercase for reserved words
+## Use uppercase for reserved words
 
 Always use **UPPERCASE** for reserved words (`SELECT`, `WHERE`, `AS`, ...). This differentiates the SQL logic from the tables and columns used in the queries and table definitions.
 
@@ -40,20 +40,20 @@ Bad:
 ```sql
 SELECT
     *
-FROM schools sc
-JOIN students st
-    ON sc.urn = st.school_urn
-WHERE cohort > 2024
+FROM schools
+JOIN students
+    ON schools.urn = students.school_urn
+WHERE students.cohort > 2024
 ``` 
 
 Good:
 ```sql
 SELECT
     *
-FROM schools sc
-INNER JOIN students st
-    ON sc.urn = st.school_urn
-WHERE cohort > 2024
+FROM schools
+INNER JOIN students
+    ON schools.urn = students.school_urn
+WHERE students.cohort > 2024
 ```
 
 #### Source breakdown
@@ -72,7 +72,7 @@ Bad:
 ```sql
 SELECT 
     full_name, 
-    -- Specific to PostgreSQL
+    /* Specific to PostgreSQL */
     date_part('year', enrolment_date) AS enrolment_year
 FROM students
 ```
@@ -81,7 +81,7 @@ Good:
 ```sql
 SELECT 
     full_name,
-    -- ANSI SQL function
+    /* ANSI SQL function */
     extract(YEAR FROM enrolment_date) AS enrolment_year
 FROM students
 ```
@@ -92,13 +92,13 @@ FROM students
  - **Against (0)**
  - **Not mentioned (7)**: PostgreSQL, Mozilla, GitLab, PG.ai, Brooklyn, Mazur, Supabase.
 
-## *Proposal* Use lowercase for functions
+## Use lowercase for functions
 
-Treat functions as identifiers. This implies writing them in lower case: `count()` instead of `COUNT()`.
+Treat functions as identifiers and always write them in **lowercase**: `count()` instead of `COUNT()`.
 
-Right now, people use lowercase and uppercase for functions. From what I have seen, most of the single-worded functions are written in uppercase (`COALESCE`, `SUM`, ...), whereas multi-worded and more 'complex' ones are written in lowercase (`string_agg`, `json_array_elements`). This makes function declaration inconsistent format-wise.
+Mixing cases is common: single-word functions tend to be written in uppercase (`COALESCE`, `SUM`, ...), while multi-word ones are written in lowercase (`string_agg`, `json_array_elements`). Always using lowercase removes that inconsistency.
 
-My proposal is to always use **lowercase** for functions. The [Bouma](https://en.wikipedia.org/wiki/Bouma) (kind of the 'shape') of uppercase words is a rectangle, making easy for our eyes to distinguish it from regular words. Using uppercase for the reserved words and the functions may hinder the readability of a query. An opposite argument could be made for the contrary statement (using uppercase for functions) using the same reasoning: it will make it easier for the developers to distinguish column names and aliases from column transformations.
+It also keeps uppercase meaningful. The [Bouma](https://en.wikipedia.org/wiki/Bouma) (the outline shape) of an uppercase word is a rectangle, which makes it stand out from regular words. Reserving uppercase for reserved words keeps the structure of the query easy to see; using it for functions too dilutes that.
 
 ##### Example
 
@@ -128,25 +128,15 @@ GROUP BY school_urn
  - **Against (3)**: GitLab, Holywell, Celko.
  - **Not mentioned (1)**: PostgreSQL.
 
-## *Proposal* Use lowercase for data types
+## Use uppercase for data types
 
-Similarly to the functions, there is currently a mix of lowercase and uppercase when using data type casting and for table definitions. Either uppercase or lowercase should be chosen.
+Data types are written in **UPPERCASE**, the same as reserved words, both in table definitions and in type casts. Mixing cases makes definitions inconsistent, so pick one and stick to it.
 
-The proposal of using **lowercase** is based on consistency between all rules (using uppercase only for reserved words), and is more in line with more recent guides and trends.
+User-defined types (enums, domains, composite types) are identifiers rather than reserved words, so they follow the naming rules instead: lowercase, with underscores.
 
-##### Example 
+##### Example
 
 Bad:
-```sql
-CREATE TABLE users (
-    id         INTEGER      PRIMARY KEY,
-    email      VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    is_active  BOOLEAN      NOT NULL
-)
-```
-
-Good:
 ```sql
 CREATE TABLE users (
     id         integer      PRIMARY KEY,
@@ -156,8 +146,18 @@ CREATE TABLE users (
 )
 ```
 
+Good:
+```sql
+CREATE TABLE users (
+    id         INTEGER      PRIMARY KEY,
+    email      VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    is_active  BOOLEAN      NOT NULL
+)
+```
+
 #### Source breakdown
 
- - **For (5)**: PG.ai, Brooklyn, Mazur, Supabase, PostgreSQL.
- - **Against (3)**: GitLab, Holywell, Celko.
+ - **For (3)**: GitLab, Holywell, Celko.
+ - **Against (5)**: PG.ai, Brooklyn, Mazur, Supabase, PostgreSQL.
  - **Not mentioned (1)**: Mozilla.

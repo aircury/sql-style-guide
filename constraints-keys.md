@@ -9,18 +9,18 @@ Every table must define at least one key to uniquely identify each row. A table 
 Bad:
 ```sql
 CREATE TABLE enrolments (
-    student_id   integer   NOT NULL,
-    course_id    integer   NOT NULL,
-    enrolled_at  timestamp NOT NULL
+    student_id   INTEGER   NOT NULL,
+    course_id    INTEGER   NOT NULL,
+    enrolled_at  TIMESTAMP NOT NULL
 );
 ```
 
 Good:
 ```sql
 CREATE TABLE enrolments (
-    student_id   integer   NOT NULL,
-    course_id    integer   NOT NULL,
-    enrolled_at  timestamp NOT NULL,
+    student_id   INTEGER   NOT NULL,
+    course_id    INTEGER   NOT NULL,
+    enrolled_at  TIMESTAMP NOT NULL,
 
     PRIMARY KEY (student_id, course_id)
 );
@@ -41,9 +41,9 @@ Name constraints explicitly so that error messages and schema introspection are 
 Bad:
 ```sql
 CREATE TABLE students (
-    id         integer NOT NULL,
-    email      text    NOT NULL,
-    cohort     integer NOT NULL,
+    id         INTEGER NOT NULL,
+    email      TEXT    NOT NULL,
+    cohort     INTEGER NOT NULL,
 
     PRIMARY KEY (id),
     CHECK (cohort > 2000)
@@ -53,9 +53,9 @@ CREATE TABLE students (
 Good:
 ```sql
 CREATE TABLE students (
-    id         integer NOT NULL,
-    email      text    NOT NULL,
-    cohort     integer NOT NULL,
+    id         INTEGER NOT NULL,
+    email      TEXT    NOT NULL,
+    cohort     INTEGER NOT NULL,
 
     PRIMARY KEY (id),
     CONSTRAINT chk_students_cohort_min CHECK (cohort > 2000)
@@ -78,9 +78,9 @@ Bad:
 ```sql
 CREATE TABLE enrolments (
     PRIMARY KEY (student_id, course_id),
-    student_id  integer   NOT NULL,
-    course_id   integer   NOT NULL,
-    enrolled_at timestamp NOT NULL,
+    student_id  INTEGER   NOT NULL,
+    course_id   INTEGER   NOT NULL,
+    enrolled_at TIMESTAMP NOT NULL,
     FOREIGN KEY (student_id) REFERENCES students (id)
 );
 ```
@@ -88,9 +88,9 @@ CREATE TABLE enrolments (
 Good:
 ```sql
 CREATE TABLE enrolments (
-    student_id  integer   NOT NULL,
-    course_id   integer   NOT NULL,
-    enrolled_at timestamp NOT NULL,
+    student_id  INTEGER   NOT NULL,
+    course_id   INTEGER   NOT NULL,
+    enrolled_at TIMESTAMP NOT NULL,
 
     PRIMARY KEY (student_id, course_id),
     FOREIGN KEY (student_id) REFERENCES students (id)
@@ -112,8 +112,8 @@ The `PRIMARY KEY` constraint should be the first constraint declared in a `CREAT
 Bad:
 ```sql
 CREATE TABLE courses (
-    id          integer NOT NULL,
-    name        text    NOT NULL,
+    id          INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
     FOREIGN KEY (school_id) REFERENCES schools (id),
     PRIMARY KEY (id)
 );
@@ -122,8 +122,8 @@ CREATE TABLE courses (
 Good:
 ```sql
 CREATE TABLE courses (
-    id          integer NOT NULL,
-    name        text    NOT NULL,
+    id          INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (school_id) REFERENCES schools (id)
@@ -145,9 +145,9 @@ Each `CHECK()` constraint should validate exactly one rule, do not combine multi
 Bad:
 ```sql
 CREATE TABLE assessments (
-    student_id  integer NOT NULL,
-    score       numeric NOT NULL,
-    weight      numeric NOT NULL,
+    student_id  INTEGER NOT NULL,
+    score       NUMERIC NOT NULL,
+    weight      NUMERIC NOT NULL,
 
     CONSTRAINT chk_assessment_values CHECK (score >= 0 AND score <= 100 AND weight > 0)
 );
@@ -156,9 +156,9 @@ CREATE TABLE assessments (
 Good:
 ```sql
 CREATE TABLE assessments (
-    student_id  integer NOT NULL,
-    score       numeric NOT NULL,
-    weight      numeric NOT NULL,
+    student_id  INTEGER NOT NULL,
+    score       NUMERIC NOT NULL,
+    weight      NUMERIC NOT NULL,
 
     CONSTRAINT chk_assessments_score_min    CHECK (score >= 0),
     CONSTRAINT chk_assessments_score_max    CHECK (score <= 100),
@@ -181,16 +181,16 @@ When constraining the format of a text column, use `LIKE` for simple pattern mat
 Bad:
 ```sql
 CREATE TABLE students (
-    email       text NOT NULL,
-    school_code text NOT NULL
+    email       TEXT NOT NULL,
+    school_code TEXT NOT NULL
 );
 ```
 
 Good:
 ```sql
 CREATE TABLE students (
-    email       text NOT NULL CHECK (email LIKE '%@%.%'),
-    school_code text NOT NULL CHECK (school_code SIMILAR TO '[A-Z]{3}[0-9]{4}')
+    email       TEXT NOT NULL CHECK (email LIKE '%@%.%'),
+    school_code TEXT NOT NULL CHECK (school_code SIMILAR TO '[A-Z]{3}[0-9]{4}')
 );
 ```
 

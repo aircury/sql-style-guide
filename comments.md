@@ -1,17 +1,19 @@
 # Comments
 
-## *Proposal* Use `/* */` for multi-line comments and `--` for single-line comments
+## Use `/* */` for comments and `--` for commented-out code
 
-Use `/* */` for block or multi-line comments. Use `--` for single-line and inline comments; end the line with a newline after the comment. Do not use `--` for block comments that may need to expand, and do not use `/* */` for inline remarks where a single `--` is clearer.
-One of the source advocates using `/* */` exclusively so that single-line comments can expand without syntax changes.
+Use `/* */` for every written comment, whether it spans one line or several. Use `--` only to comment out lines of code, prefixing each line.
+
+This keeps commented-out code visible in reviews. When a block of code is wrapped in `/* */`, a diff only shows the opening and closing markers, so it is easy to miss that the lines in between are disabled. With `--` on every line, each disabled line is marked.
+
+Avoid committing commented-out code at all: delete it and rely on version control. Use `--` only when a line has to stay disabled for a reason.
 
 ##### Example
 
 Bad:
 ```sql
--- This query returns all active students
--- enrolled in at least one course
--- during the current academic year
+-- Returns all active students enrolled in at least one course
+-- during the current academic year.
 SELECT
     students.full_name,
     count(enrolments.course_id) AS total_courses
@@ -21,26 +23,13 @@ INNER JOIN enrolments
     ON students.id = enrolments.student_id
 WHERE 
     students.is_active IS true
+/*
+    AND students.cohort > 2024
+    AND students.school_urn IS NOT NULL
+*/
 ```
 
 Good:
-```sql
-/*
- * Returns all active students enrolled in at least one course
- * during the current academic year.
- */
-SELECT
-    students.full_name,
-    count(enrolments.course_id) AS total_courses
-FROM students
--- Current enrolments
-INNER JOIN enrolments 
-    ON students.id = enrolments.student_id
-WHERE 
-    students.is_active IS true
-```
-
-Good (always `/* */`):
 ```sql
 /*
  * Returns all active students enrolled in at least one course
@@ -55,6 +44,8 @@ INNER JOIN enrolments
     ON students.id = enrolments.student_id
 WHERE 
     students.is_active IS true
+    -- AND students.cohort > 2024
+    -- AND students.school_urn IS NOT NULL
 ```
 
 #### Source breakdown
@@ -95,7 +86,7 @@ Good:
 SELECT
     full_name,
     cohort,
-    -- Weighted final grade: 60% assessment score, 40% attendance
+    /* Weighted final grade: 60% assessment score, 40% attendance */
     score * 0.6 + attendance_score * 0.4 AS final_grade
 FROM students
 WHERE 

@@ -34,38 +34,42 @@ FROM students
  - **Against (0)**
  - **Not mentioned (0)**
 
-### *Details to discuss* Names must be descriptive, consistent and unambiguous
+### Names must be descriptive, consistent and unambiguous
 
 Use descriptive names and consistent across tables (for example, `cohort` should mean the same and have the same data type everywhere). Do not use descriptive prefixes that explain the role or type of the identifier (`tbl_`, `sp_`, `fk_`, ...).
 
 Besides, avoid abbreviations unless they are commonly understood (for example, only use `urn` if the whole team understands that it means "unique reference number").
 
-Vague identifiers is the only thing not all guides are in favor of removing, and it refers to names like `id`, `type` or `name` without a prefix to state what they identify. An argument can be made that most of the times those identifiers implicitly state what they identify by virtue of the table they reside in (if `users` has a column `id`, it is clearly the unique identifier of an user). This is the part of the rule to be discussed.
+Generic column names such as `id`, `name` or `type` are allowed inside their own table, as the table already states what they identify: use `users.id`, not `users.user_id`. Prefixing them repeats the table name and makes the column look like a reference to another table. Foreign keys do carry the referenced entity as a prefix (`courses.user_id`), so joins read naturally: `ON courses.user_id = users.id`.
+
+When selecting a generic column, always give it a meaningful alias in `table_column` form (`users.id AS user_id`, `courses.name AS course_name`), keeping the `AS` keywords aligned. This keeps the result set unambiguous.
 
 ##### Example
 
 Bad:
 ```sql
 SELECT
-    e.pid,
-    e.created_at,
-    c.date_creation,
-    c.cohort
-FROM enrolments AS e
-INNER JOIN tbl_courses AS c
-    ON e.course_id = c.id	
+    enrolments.pid,
+    enrolments.created_at,
+    tbl_courses.course_name,
+    tbl_courses.date_creation,
+    tbl_courses.cohort
+FROM enrolments
+INNER JOIN tbl_courses
+    ON enrolments.course_id = tbl_courses.course_id	
 ```
 
 Good:
 ```sql
 SELECT
-    e.participant_id,
-    e.created_at AS enrolment_created_at,
-    c.created_at AS course_created_at,
-    c.cohort
-FROM enrolments AS e
-INNER JOIN courses AS c
-    ON e.course_id = c.id	
+    enrolments.participant_id,
+    enrolments.created_at AS enrolment_created_at,
+    courses.name          AS course_name,
+    courses.created_at    AS course_created_at,
+    courses.cohort
+FROM enrolments
+INNER JOIN courses
+    ON enrolments.course_id = courses.id	
 ```
 
 #### Source breakdown
@@ -104,22 +108,22 @@ Use only lowercase alphanumeric characters for names separated by underscores, b
 Bad:
 ```sql
 CREATE TABLE "Enrolments" (
-    1st_grade     numeric(4,2),
-    student__name varchar,
-    course_id_    integer,
-    "Is Active"   boolean,
-    createdat     timestamp
+    1st_grade     NUMERIC(4,2),
+    student__name VARCHAR,
+    course_id_    INTEGER,
+    "Is Active"   BOOLEAN,
+    createdat     TIMESTAMP
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE enrolments (
-    final_grade  numeric(4,2),
-    student_name varchar,
-    course_id    integer,
-    is_active    boolean,
-    created_at   timestamp
+    final_grade  NUMERIC(4,2),
+    student_name VARCHAR,
+    course_id    INTEGER,
+    is_active    BOOLEAN,
+    created_at   TIMESTAMP
 )
 ```
 
@@ -149,10 +153,10 @@ Never use words such as `sum`, `count`, ... It will have to be quoted everywhere
 Bad:
 ```sql
 CREATE TABLE students (
-    id         integer PRIMARY KEY,
-    first_name varchar,
-    last_name  varchar,
-    group      varchar
+    id         INTEGER PRIMARY KEY,
+    first_name VARCHAR,
+    last_name  VARCHAR,
+    group      VARCHAR
 )
 ...
 CREATE TABLE union (...)
@@ -161,10 +165,10 @@ CREATE TABLE union (...)
 Good:
 ```sql
 CREATE TABLE students (
-    id          integer PRIMARY KEY,
-    first_name  varchar,
-    last_name   varchar,
-    cohort_name varchar
+    id          INTEGER PRIMARY KEY,
+    first_name  VARCHAR,
+    last_name   VARCHAR,
+    cohort_name VARCHAR
 )
 ...
 CREATE TABLE merges (...)
@@ -176,7 +180,7 @@ CREATE TABLE merges (...)
  - **Against (0)**
  - **Not mentioned (6)**: Holywell, Celko, PostgreSQL, PG.ai, Mozilla, Mazur.
 
-## *Proposal* Use collective, class or plural nouns for tables
+## Use collective, class or plural nouns for tables
 
 The core reasoning behind this rule is that tables hold many rows, and each row represents one entity of something, so the table name should reflect its plural nature. Use collective nouns if possible (for example, `staff` over `employees`). Otherwise, use plural nouns.
 
@@ -230,25 +234,25 @@ CREATE TABLE residences (...);
 
 ### Use singular names for columns
 
-A column holds one value per row, so using singular reflects that. An exception can be made for `array` or `json` columns, but those should be avoided where possible.
+A column holds one value per row, so using singular reflects that. An exception can be made for `ARRAY` or `JSON` columns, but those should be avoided where possible.
 
 ##### Example
 
 Bad:
 ```sql
 CREATE TABLE students (
-    id        integer PRIMARY KEY, 
-    full_name varchar,
-    absences  integer
+    id        INTEGER PRIMARY KEY, 
+    full_name VARCHAR,
+    absences  INTEGER
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE students (
-    id            integer PRIMARY KEY, 
-    full_name     varchar,
-    absence_count integer
+    id            INTEGER PRIMARY KEY, 
+    full_name     VARCHAR,
+    absence_count INTEGER
 )
 ```
 
@@ -323,18 +327,18 @@ Do not duplicate the table name in column name. This means two different things:
 Bad:
 ```sql
 CREATE TABLE grades (
-    id           integer PRIMARY KEY,
-    grade        numeric(3,1),
-    grade_letter varchar(1)
+    id           INTEGER PRIMARY KEY,
+    grade        NUMERIC(3,1),
+    grade_letter VARCHAR(1)
 )
 ```
 
 Good:
 ```sql
 CREATE TABLE grades (
-    id     integer PRIMARY KEY,
-    score  numeric(3,1),
-    letter varchar(1)
+    id     INTEGER PRIMARY KEY,
+    score  NUMERIC(3,1),
+    letter VARCHAR(1)
 )
 ```
 
