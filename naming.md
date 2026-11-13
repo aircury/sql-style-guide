@@ -34,13 +34,15 @@ FROM students
  - **Against (0)**
  - **Not mentioned (0)**
 
-### *Details to discuss* Names must be descriptive, consistent and unambiguous
+### Names must be descriptive, consistent and unambiguous
 
 Use descriptive names and consistent across tables (for example, `cohort` should mean the same and have the same data type everywhere). Do not use descriptive prefixes that explain the role or type of the identifier (`tbl_`, `sp_`, `fk_`, ...).
 
 Besides, avoid abbreviations unless they are commonly understood (for example, only use `urn` if the whole team understands that it means "unique reference number").
 
-Vague identifiers is the only thing not all guides are in favor of removing, and it refers to names like `id`, `type` or `name` without a prefix to state what they identify. An argument can be made that most of the times those identifiers implicitly state what they identify by virtue of the table they reside in (if `users` has a column `id`, it is clearly the unique identifier of an user). This is the part of the rule to be discussed.
+Generic column names such as `id`, `name` or `type` are allowed inside their own table, as the table already states what they identify: use `users.id`, not `users.user_id`. Prefixing them repeats the table name and makes the column look like a reference to another table. Foreign keys do carry the referenced entity as a prefix (`courses.user_id`), so joins read naturally: `ON courses.user_id = users.id`.
+
+When selecting a generic column, always give it a meaningful alias in `table_column` form (`users.id AS user_id`, `courses.name AS course_name`), keeping the `AS` keywords aligned. This keeps the result set unambiguous.
 
 ##### Example
 
@@ -49,11 +51,12 @@ Bad:
 SELECT
     enrolments.pid,
     enrolments.created_at,
+    tbl_courses.course_name,
     tbl_courses.date_creation,
     tbl_courses.cohort
 FROM enrolments
 INNER JOIN tbl_courses
-    ON enrolments.course_id = tbl_courses.id	
+    ON enrolments.course_id = tbl_courses.course_id	
 ```
 
 Good:
@@ -61,6 +64,7 @@ Good:
 SELECT
     enrolments.participant_id,
     enrolments.created_at AS enrolment_created_at,
+    courses.name          AS course_name,
     courses.created_at    AS course_created_at,
     courses.cohort
 FROM enrolments
