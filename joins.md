@@ -1,6 +1,6 @@
 # JOIN clauses
 
-## *Proposal* Use `ON` for all join conditions; avoid `USING`
+## Use `ON` for all join conditions; avoid `USING`
 
 Always express join conditions with `ON`, even when the joining columns share the same name. Avoid `USING`, as it silently merges the columns into one in the result set, which can cause unexpected behaviour when adding aliases or when the query is refactored.
 
