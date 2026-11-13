@@ -434,29 +434,29 @@ GROUP BY
  - **Against (0)**
  - **Not mentioned (5)**: PostgreSQL, PG.ai, Mozilla, GitLab, Supabase.
 
-## *Proposal* Use trailing commas
+## Use trailing commas
 
 In lists of arguments (columns in `SELECT`, values in `IN`, ...) place commas at the **end** of each line (trailing) rather than the **beginning** (leading).
 
-Trailing commas are the more widely supported convention and feel natural to most developers. Leading commas, on the other hand, make it easy to spot a missing comma since it is the first character visible on each line.
+Trailing commas are the more widely supported convention and feel natural to most developers. A missing comma is already flagged by most IDEs before the query is run.
 
 ##### Example
 
-Trailing commas:
-```sql
-SELECT
-    full_name,
-    email,
-    cohort
-FROM students
-```
-
-Leading commas:
+Bad:
 ```sql
 SELECT
       full_name
     , email
     , cohort
+FROM students
+```
+
+Good:
+```sql
+SELECT
+    full_name,
+    email,
+    cohort
 FROM students
 ```
 
