@@ -9,7 +9,7 @@ Always use **UPPERCASE** for reserved words (`SELECT`, `WHERE`, `AS`, ...). This
 Bad:
 ```sql
 select
-    adress,
+    address,
     urn as school_urn
 from schools
 where cohort > 2024
@@ -18,7 +18,7 @@ where cohort > 2024
 Good:
 ```sql
 SELECT
-    adress,
+    address,
     urn AS school_urn
 FROM schools
 WHERE cohort > 2024
@@ -38,8 +38,7 @@ Always use the full keyword forms instead of the abbreviation.
 
 Bad:
 ```sql
-SELECT
-    *
+SELECT *
 FROM schools
 JOIN students
     ON schools.urn = students.school_urn
@@ -48,8 +47,7 @@ WHERE students.cohort > 2024
 
 Good:
 ```sql
-SELECT
-    *
+SELECT *
 FROM schools
 INNER JOIN students
     ON schools.urn = students.school_urn
@@ -70,8 +68,8 @@ If an ANSI SQL keyword exists for a function or procedure, use it instead of a v
 
 Bad:
 ```sql
-SELECT 
-    full_name, 
+SELECT
+    full_name,
     /* Specific to PostgreSQL */
     date_part('year', enrolment_date) AS enrolment_year
 FROM students
@@ -79,7 +77,7 @@ FROM students
 
 Good:
 ```sql
-SELECT 
+SELECT
     full_name,
     /* ANSI SQL function */
     extract(YEAR FROM enrolment_date) AS enrolment_year

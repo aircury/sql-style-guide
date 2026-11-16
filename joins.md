@@ -9,20 +9,20 @@ Always express join conditions with `ON`, even when the joining columns share th
 Bad:
 ```sql
 SELECT
-    students.full_name,
-    enrolments.course_id
-FROM students
-INNER JOIN enrolments USING (student_id)
+    enrolments.course_id,
+    scholarships.amount_eur
+FROM enrolments
+INNER JOIN scholarships USING (student_id)
 ```
 
 Good:
 ```sql
 SELECT
-    students.full_name,
-    enrolments.course_id
-FROM students
-INNER JOIN enrolments
-    ON students.id = enrolments.student_id
+    enrolments.course_id,
+    scholarships.amount_eur
+FROM enrolments
+INNER JOIN scholarships
+    ON enrolments.student_id = scholarships.student_id
 ```
 
 #### Source breakdown
@@ -91,7 +91,7 @@ SELECT
 FROM students
 INNER JOIN enrolments
     ON students.id = enrolments.student_id
-WHERE 
+WHERE
     students.is_active IS true
     AND enrolments.completed_at IS NOT NULL
 ```

@@ -9,20 +9,20 @@ When storing monetary amounts or any value where exact precision matters, use `N
 Bad:
 ```sql
 CREATE TABLE school_fees (
-    student_id   INTEGER      NOT NULL,
-    amount       FLOAT        NOT NULL,
-    discount     REAL         NOT NULL,
-    paid_at      TIMESTAMP    NOT NULL
+    student_id INTEGER   NOT NULL,
+    amount     FLOAT     NOT NULL,
+    discount   REAL      NOT NULL,
+    paid_at    TIMESTAMP NOT NULL
 );
 ```
 
 Good:
 ```sql
 CREATE TABLE school_fees (
-    student_id   INTEGER        NOT NULL,
-    amount       NUMERIC(10, 2) NOT NULL,
-    discount     DECIMAL(5, 2)  NOT NULL,
-    paid_at      TIMESTAMP      NOT NULL
+    student_id INTEGER        NOT NULL,
+    amount     NUMERIC(10, 2) NOT NULL,
+    discount   DECIMAL(5, 2)  NOT NULL,
+    paid_at    TIMESTAMP      NOT NULL
 );
 ```
 
@@ -44,7 +44,7 @@ SELECT
     full_name,
     is_active
 FROM students
-WHERE 
+WHERE
     is_active = 1
     AND has_scholarship = 0
 ```
@@ -55,7 +55,7 @@ SELECT
     full_name,
     is_active
 FROM students
-WHERE 
+WHERE
     is_active IS true
     AND has_scholarship IS false
 ```
@@ -108,7 +108,7 @@ Bad:
 ```sql
 SELECT *
 FROM enrolments
-WHERE 
+WHERE
     enrolled_at > '01/09/2024'
     AND completed_at < '31/07/2025 23:59:59'
 ```
@@ -117,7 +117,7 @@ Good:
 ```sql
 SELECT *
 FROM enrolments
-WHERE 
+WHERE
     enrolled_at > DATE '2024-09-01'
     AND completed_at < TIMESTAMP '2025-07-31T23:59:59'
 ```

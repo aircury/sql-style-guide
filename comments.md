@@ -19,9 +19,9 @@ SELECT
     count(enrolments.course_id) AS total_courses
 FROM students
 -- Current enrolments
-INNER JOIN enrolments 
+INNER JOIN enrolments
     ON students.id = enrolments.student_id
-WHERE 
+WHERE
     students.is_active IS true
 /*
     AND students.cohort > 2024
@@ -40,9 +40,9 @@ SELECT
     count(enrolments.course_id) AS total_courses
 FROM students
 /* Current enrolments */
-INNER JOIN enrolments 
+INNER JOIN enrolments
     ON students.id = enrolments.student_id
-WHERE 
+WHERE
     students.is_active IS true
     -- AND students.cohort > 2024
     -- AND students.school_urn IS NOT NULL
@@ -63,11 +63,11 @@ Add comments where the intent or logic is not self-evident. Do not comment every
 Bad (over-commented):
 ```sql
 SELECT
-    full_name, -- the student's full name
-    cohort     -- the cohort year
-FROM students  -- from the students table
-WHERE 
-    is_active IS true -- only active students
+    full_name, /* the student's full name */
+    cohort     /* the cohort year */
+FROM students  /* from the students table */
+WHERE
+    is_active IS true /* only active students */
 ```
 
 Bad (under-commented):
@@ -77,7 +77,7 @@ SELECT
     cohort,
     score * 0.6 + attendance_score * 0.4 AS final_grade
 FROM students
-WHERE 
+WHERE
     cohort = 2025
 ```
 
@@ -89,7 +89,7 @@ SELECT
     /* Weighted final grade: 60% assessment score, 40% attendance */
     score * 0.6 + attendance_score * 0.4 AS final_grade
 FROM students
-WHERE 
+WHERE
     cohort = 2025
 ```
 
@@ -110,12 +110,12 @@ Bad:
 WITH eligible_students AS (
     SELECT student_id
     FROM enrolments
-    WHERE 
+    WHERE
         completed_at IS NOT NULL
         AND grade >= 50
         AND course_id NOT IN (
-            SELECT id 
-            FROM courses 
+            SELECT id
+            FROM courses
             WHERE is_pilot IS true
         )
 )
@@ -132,12 +132,12 @@ Good:
 WITH eligible_students AS (
     SELECT student_id
     FROM enrolments
-    WHERE 
+    WHERE
         completed_at IS NOT NULL
         AND grade >= 50
         AND course_id NOT IN (
-            SELECT id 
-            FROM courses 
+            SELECT id
+            FROM courses
             WHERE is_pilot IS true
         )
 )

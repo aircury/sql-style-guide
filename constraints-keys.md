@@ -9,18 +9,18 @@ Every table must define at least one key to uniquely identify each row. A table 
 Bad:
 ```sql
 CREATE TABLE enrolments (
-    student_id   INTEGER   NOT NULL,
-    course_id    INTEGER   NOT NULL,
-    enrolled_at  TIMESTAMP NOT NULL
+    student_id  INTEGER   NOT NULL,
+    course_id   INTEGER   NOT NULL,
+    enrolled_at TIMESTAMP NOT NULL
 );
 ```
 
 Good:
 ```sql
 CREATE TABLE enrolments (
-    student_id   INTEGER   NOT NULL,
-    course_id    INTEGER   NOT NULL,
-    enrolled_at  TIMESTAMP NOT NULL,
+    student_id  INTEGER   NOT NULL,
+    course_id   INTEGER   NOT NULL,
+    enrolled_at TIMESTAMP NOT NULL,
 
     PRIMARY KEY (student_id, course_id)
 );
@@ -41,9 +41,9 @@ Name constraints explicitly so that error messages and schema introspection are 
 Bad:
 ```sql
 CREATE TABLE students (
-    id         INTEGER NOT NULL,
-    email      TEXT    NOT NULL,
-    cohort     INTEGER NOT NULL,
+    id     INTEGER NOT NULL,
+    email  TEXT    NOT NULL,
+    cohort INTEGER NOT NULL,
 
     PRIMARY KEY (id),
     CHECK (cohort > 2000)
@@ -53,9 +53,9 @@ CREATE TABLE students (
 Good:
 ```sql
 CREATE TABLE students (
-    id         INTEGER NOT NULL,
-    email      TEXT    NOT NULL,
-    cohort     INTEGER NOT NULL,
+    id     INTEGER NOT NULL,
+    email  TEXT    NOT NULL,
+    cohort INTEGER NOT NULL,
 
     PRIMARY KEY (id),
     CONSTRAINT chk_students_cohort_min CHECK (cohort > 2000)
@@ -68,9 +68,9 @@ CREATE TABLE students (
  - **Against (0)**
  - **Not mentioned (7)**: PostgreSQL, PG.ai, Mozilla, Brooklyn, GitLab, Mazur, Supabase.
 
-## Place multi-column constraints near both columns; table-level constraints at the end
+## Place table-level constraints at the end
 
-Multi-column constraints should be positioned as close as possible to all the columns they reference. Table-level constraints (those that span multiple columns or apply to the table as a whole) go at the end of the `CREATE TABLE` definition, after all column declarations.
+Table-level constraints (those that span multiple columns or apply to the table as a whole) go at the end of the `CREATE TABLE` definition, after all column declarations, separated from them by a blank line.
 
 ##### Example
 
@@ -112,8 +112,9 @@ The `PRIMARY KEY` constraint should be the first constraint declared in a `CREAT
 Bad:
 ```sql
 CREATE TABLE courses (
-    id          INTEGER NOT NULL,
-    name        TEXT    NOT NULL,
+    id        INTEGER NOT NULL,
+    name      TEXT    NOT NULL,
+    school_id INTEGER NOT NULL,
     FOREIGN KEY (school_id) REFERENCES schools (id),
     PRIMARY KEY (id)
 );
@@ -122,8 +123,9 @@ CREATE TABLE courses (
 Good:
 ```sql
 CREATE TABLE courses (
-    id          INTEGER NOT NULL,
-    name        TEXT    NOT NULL,
+    id        INTEGER NOT NULL,
+    name      TEXT    NOT NULL,
+    school_id INTEGER NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (school_id) REFERENCES schools (id)
@@ -138,16 +140,16 @@ CREATE TABLE courses (
 
 ## Keep each constraint single-focused
 
-Each `CHECK()` constraint should validate exactly one rule, do not combine multiple conditions into a single constraint. Use `CHECK()` constraints to enforce numerical ranges, with at minimum a `> 0` guard where a value must be positive.
+Each `CHECK()` constraint should validate exactly one rule: do not combine multiple conditions into a single constraint. Use `CHECK()` constraints to enforce numerical ranges, with at minimum a `> 0` guard where a value must be positive.
 
 ##### Example
 
 Bad:
 ```sql
 CREATE TABLE assessments (
-    student_id  INTEGER NOT NULL,
-    score       NUMERIC NOT NULL,
-    weight      NUMERIC NOT NULL,
+    student_id INTEGER NOT NULL,
+    score      NUMERIC NOT NULL,
+    weight     NUMERIC NOT NULL,
 
     CONSTRAINT chk_assessment_values CHECK (score >= 0 AND score <= 100 AND weight > 0)
 );
@@ -156,13 +158,13 @@ CREATE TABLE assessments (
 Good:
 ```sql
 CREATE TABLE assessments (
-    student_id  INTEGER NOT NULL,
-    score       NUMERIC NOT NULL,
-    weight      NUMERIC NOT NULL,
+    student_id INTEGER NOT NULL,
+    score      NUMERIC NOT NULL,
+    weight     NUMERIC NOT NULL,
 
-    CONSTRAINT chk_assessments_score_min    CHECK (score >= 0),
-    CONSTRAINT chk_assessments_score_max    CHECK (score <= 100),
-    CONSTRAINT chk_assessments_weight_min   CHECK (weight > 0)
+    CONSTRAINT chk_assessments_score_min  CHECK (score >= 0),
+    CONSTRAINT chk_assessments_score_max  CHECK (score <= 100),
+    CONSTRAINT chk_assessments_weight_min CHECK (weight > 0)
 );
 ```
 
@@ -189,8 +191,11 @@ CREATE TABLE students (
 Good:
 ```sql
 CREATE TABLE students (
-    email       TEXT NOT NULL CHECK (email LIKE '%@%.%'),
-    school_code TEXT NOT NULL CHECK (school_code SIMILAR TO '[A-Z]{3}[0-9]{4}')
+    email       TEXT NOT NULL,
+    school_code TEXT NOT NULL,
+
+    CONSTRAINT chk_students_email_format       CHECK (email LIKE '%@%.%'),
+    CONSTRAINT chk_students_school_code_format CHECK (school_code SIMILAR TO '[A-Z]{3}[0-9]{4}')
 );
 ```
 

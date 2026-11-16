@@ -107,15 +107,15 @@ WITH student_data AS (
         avg(assessments.score)      AS avg_score,
         max(assessments.score)      AS top_score
     FROM students
-    INNER JOIN enrolments 
+    INNER JOIN enrolments
         ON students.id = enrolments.student_id
-    INNER JOIN assessments 
+    INNER JOIN assessments
         ON enrolments.id = assessments.enrolment_id
     WHERE students.is_active IS true
     GROUP BY students.full_name
 )
 
-SELECT * 
+SELECT *
 FROM student_data
 ```
 
@@ -150,7 +150,7 @@ student_scores AS (
     GROUP BY student_enrolments.full_name
 )
 
-SELECT * 
+SELECT *
 FROM student_scores
 ```
 
@@ -162,7 +162,7 @@ FROM student_scores
 
 ## CTE and subquery names should be descriptive
 
-CTE names should clearly convey what the CTE produces. Prefer names that read like a noun phrase describing the result set  (like `active_students`) rather than abbreviations or vague labels like `data` or `tmp`. Make names as long as they need to be to stay unambiguous, without padding them with unnecessary words.
+CTE names should clearly convey what the CTE produces. Prefer names that read like a noun phrase describing the result set (like `active_students`) rather than abbreviations or vague labels like `data` or `tmp`. Make names as long as they need to be to stay unambiguous, without padding them with unnecessary words.
 
 The same applies to subquery aliases, for example a subquery in a `JOIN` or `FROM` clause.
 
@@ -245,28 +245,28 @@ Avoid names like `cte_active_students` or `active_students_cte`. The `WITH` keyw
 Bad:
 ```sql
 WITH cte_active_students AS (
-    SELECT 
-        id, 
+    SELECT
+        id,
         full_name
     FROM students
     WHERE is_active IS true
 )
 
-SELECT * 
+SELECT *
 FROM cte_active_students
 ```
 
 Good:
 ```sql
 WITH active_students AS (
-    SELECT 
-        id, 
+    SELECT
+        id,
         full_name
     FROM students
     WHERE is_active IS true
 )
 
-SELECT * 
+SELECT *
 FROM active_students
 ```
 

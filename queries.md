@@ -10,7 +10,7 @@ Bad:
 ```sql
 SELECT *
 FROM enrolments
-WHERE 
+WHERE
     cohort >= 2022
     AND cohort <= 2024
     AND (
@@ -24,7 +24,7 @@ Good:
 ```sql
 SELECT *
 FROM enrolments
-WHERE 
+WHERE
     cohort BETWEEN 2022 AND 2024
     AND status IN ('active', 'pending', 'deferred')
 ```
@@ -35,7 +35,7 @@ WHERE
  - **Against (0)**
  - **Not mentioned (8)**: Celko, PostgreSQL, PG.ai, Mozilla, Brooklyn, GitLab, Mazur, Supabase.
 
-## CASE Statements
+## `CASE` expressions
 
 ### Use `CASE` for conditional logic
 
@@ -75,10 +75,9 @@ FROM assessments
  - **Against (0)**
  - **Not mentioned (6)**: PostgreSQL, PG.ai, Mozilla, Brooklyn, Mazur, Supabase.
 
-### Use a multi line `CASE` structure
+### Use a multi-line `CASE` structure
 
 For `CASE` expressions that span multiple lines, indent each `WHEN` one level under `CASE`. Place `THEN` on the same line as its `WHEN`. Put `ELSE` at the same indentation level as `WHEN`. Close with `END` on its own line, aligned with `CASE`.
-
 
 ##### Example
 
@@ -116,6 +115,17 @@ When a `CASE` has only one `WHEN` branch and the `THEN` value is short, the enti
 
 ##### Example
 
+Bad:
+```sql
+SELECT
+    full_name,
+    CASE
+        WHEN is_active IS true THEN details
+    END AS details
+FROM students
+```
+
+Good:
 ```sql
 SELECT
     full_name,
@@ -168,31 +178,31 @@ FROM assessments
 
 Bad:
 ```sql
-SELECT 
-    student_id, 
-    course_id 
-FROM enrolments 
+SELECT
+    student_id,
+    course_id
+FROM enrolments
 WHERE status = 'active'
 UNION
-SELECT 
-    student_id, 
-    course_id 
-FROM archived_enrolments 
+SELECT
+    student_id,
+    course_id
+FROM archived_enrolments
 WHERE status = 'active'
 ```
 
 Good:
 ```sql
-SELECT 
-    student_id, 
-    course_id 
-FROM enrolments 
+SELECT
+    student_id,
+    course_id
+FROM enrolments
 WHERE status = 'active'
 UNION ALL
-SELECT 
-    student_id, 
-    course_id 
-FROM archived_enrolments 
+SELECT
+    student_id,
+    course_id
+FROM archived_enrolments
 WHERE status = 'active'
 ```
 
@@ -337,17 +347,17 @@ When an expression in `SELECT` has a column alias, you can reference that alias 
 Bad:
 ```sql
 SELECT
-    date_trunc('year', enrolled_at) AS enrolment_year,
-    count(student_id)               AS total_students
+    extract(YEAR FROM enrolled_at) AS enrolment_year,
+    count(student_id)              AS total_students
 FROM enrolments
-GROUP BY date_trunc('year', enrolled_at)
+GROUP BY extract(YEAR FROM enrolled_at)
 ```
 
 Good:
 ```sql
 SELECT
-    date_trunc('year', enrolled_at) AS enrolment_year,
-    count(student_id)               AS total_students
+    extract(YEAR FROM enrolled_at) AS enrolment_year,
+    count(student_id)              AS total_students
 FROM enrolments
 GROUP BY enrolment_year
 ```
@@ -368,7 +378,7 @@ Bad:
 ```sql
 SELECT
     count(student_id) AS total_students,
-    avg(score)        AS avg_score,
+    avg(score)        AS average_score,
     school_id,
     cohort
 FROM students
@@ -381,7 +391,7 @@ SELECT
     school_id,
     cohort,
     count(student_id) AS total_students,
-    avg(score)        AS avg_score
+    avg(score)        AS average_score
 FROM students
 GROUP BY school_id, cohort
 ```
@@ -394,7 +404,7 @@ GROUP BY school_id, cohort
 
 ## Be explicit in boolean conditions
 
-Write boolean comparisons using `IS true` and `IS false` rather than relying on implicit boolean evaluation. Why use `IS` instead of `=`? Unlike `= true`, the `IS` form always returns a definite boolean, never propagating `NULL`. When the column is `NULL`, `column = true` evaluates to `NULL` (which SQL treats as falsy), while `column IS true` evaluates to `FALSE`. This distinction matters: `= true` and `IS true` behave the same in a `WHERE` clause, but `IS true` makes the null behaviour explicit and works correctly in `CASE` expressions and derived columns where a `NULL` result would otherwise silently propagate.
+Write boolean comparisons using `IS true` and `IS false` rather than relying on implicit boolean evaluation. Why use `IS` instead of `=`? Unlike `= true`, the `IS` form always returns a definite boolean, never propagating `NULL`. When the column is `NULL`, `column = true` evaluates to `NULL` (which SQL treats as falsy), while `column IS true` evaluates to `false`. This distinction matters: `= true` and `IS true` behave the same in a `WHERE` clause, but `IS true` makes the null behaviour explicit and works correctly in `CASE` expressions and derived columns where a `NULL` result would otherwise silently propagate.
 
 ##### Example
 
@@ -402,7 +412,7 @@ Bad:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     is_active
     AND NOT has_scholarship
 ```
@@ -411,7 +421,7 @@ Good:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     is_active IS true
     AND has_scholarship IS false
 ```
@@ -432,7 +442,7 @@ Bad:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     cohort <> 2024
     AND status <> 'withdrawn'
 ```
@@ -441,7 +451,7 @@ Good:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     cohort != 2024
     AND status != 'withdrawn'
 ```
@@ -499,7 +509,7 @@ Bad:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     (is_active IS true)
     AND (cohort > 2020)
     AND (school_id IN (101, 102))
@@ -509,7 +519,7 @@ Good:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     is_active IS true
     AND cohort > 2020
     AND school_id IN (101, 102)
@@ -527,22 +537,28 @@ If a window function fits on a single line without exceeding the line length lim
 
 ##### Example
 
-One line (fits):
-```sql
-SELECT
-    student_id,
-    row_number() OVER (PARTITION BY cohort ORDER BY score DESC) AS rank
-FROM assessments
-```
-
-Multi-line (too long):
+Bad:
 ```sql
 SELECT
     student_id,
     row_number() OVER (
+        PARTITION BY cohort
+        ORDER BY score DESC
+    ) AS cohort_rank,
+    sum(score) OVER (PARTITION BY cohort, school_id ORDER BY enrolled_at ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_total_score
+FROM assessments
+```
+
+Good:
+```sql
+SELECT
+    student_id,
+    row_number() OVER (PARTITION BY cohort ORDER BY score DESC) AS cohort_rank,
+    sum(score) OVER (
         PARTITION BY cohort, school_id
-        ORDER BY score DESC, enrolled_at ASC
-    ) AS rank
+        ORDER BY enrolled_at ASC
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_total_score
 FROM assessments
 ```
 

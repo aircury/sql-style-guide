@@ -19,7 +19,7 @@ SELECT full_name,
 
 Good:
 ```sql
-SELECT 
+SELECT
     full_name,
     email,
     created_at
@@ -31,7 +31,7 @@ WHERE school_urn = '02352'
 
  - **For river (2)**: Celko, Holywell.
  - **For left align (5)**: PG.ai, GitLab, Mozilla, Brooklyn, Mazur.
- - **No mention (2)**: PostgreSQL, Supabase.
+ - **Not mentioned (2)**: PostgreSQL, Supabase.
 
 ## Each major clause on its own line
 
@@ -60,11 +60,11 @@ GROUP BY full_name, email
  - **Against (0)**
  - **Not mentioned (2)**: Celko, Supabase.
 
-## Place `SELECT` and `WHERE` arguments below the keyword
+## Place `SELECT`, `WHERE` and `HAVING` arguments below the keyword
 
-In `SELECT` and `WHERE`, if the clause has only one argument, it may share the line with the keyword. If it has multiple arguments, each must be on its own line below the keyword, indented one level, including the first.
+In `SELECT`, `WHERE` and `HAVING`, if the clause has only one argument, it may share the line with the keyword. If it has multiple arguments, each must be on its own line below the keyword, indented one level, including the first.
 
-Other clauses (`FROM`, `GROUP BY`, `HAVING`, `ORDER BY`, ...) keep their arguments on the same line as the keyword (`GROUP BY cohort, school_urn`).
+Other clauses (`FROM`, `GROUP BY`, `ORDER BY`, ...) keep their arguments on the same line as the keyword (`GROUP BY cohort, school_urn`).
 
 ##### Example
 
@@ -75,8 +75,7 @@ FROM students
 WHERE cohort > 2024 AND is_active IS true
 GROUP BY
     cohort
-HAVING
-    count(*) > 10
+HAVING count(*) > 10 AND avg(score) > 50
 ```
 
 Good:
@@ -89,14 +88,18 @@ WHERE
     cohort > 2024
     AND is_active IS true
 GROUP BY cohort
-HAVING count(*) > 10
+HAVING
+    count(*) > 10
+    AND avg(score) > 50
 ```
 
 Good (single argument sharing the line):
 ```sql
-SELECT count(*) AS total_students
+SELECT school_urn
 FROM students
 WHERE cohort > 2024
+GROUP BY school_urn
+HAVING count(*) > 10
 ```
 
 #### Source breakdown
@@ -164,10 +167,10 @@ SELECT
     students.full_name,
     courses.name AS course_name
 FROM students
-INNER JOIN enrolments 
+INNER JOIN enrolments
     ON students.id = enrolments.student_id
     AND students.cohort = enrolments.cohort
-INNER JOIN courses 
+INNER JOIN courses
     ON enrolments.course_id = courses.id
 ```
 
@@ -190,6 +193,7 @@ WITH active_students AS (SELECT
     full_name
     FROM students
     WHERE is_active IS true)
+
 SELECT *
 FROM active_students
 ```
@@ -203,6 +207,7 @@ WITH active_students AS (
     FROM students
     WHERE is_active IS true
 )
+
 SELECT *
 FROM active_students
 ```
@@ -213,9 +218,9 @@ FROM active_students
  - **Against (0)**
  - **Not mentioned (6)**: Celko, PostgreSQL, Brooklyn, GitLab, Mazur, Supabase.
 
-## Indent CTEs under `WITH`
+## Indent CTE bodies one level
 
-Each CTE name and its body should be indented one level under the `WITH` keyword. Leave a blank line between each CTE for visual separation.
+Start the first CTE on the `WITH` line, and put each following CTE at the same level as `WITH`. Indent each CTE body one level, and close it with `)` on its own line. Leave a blank line between CTEs and before the main query.
 
 ##### Example
 
@@ -243,13 +248,15 @@ WITH active_students AS (
     FROM students
     WHERE is_active IS true
 ),
+
 recent_enrolments AS (
     SELECT
         student_id,
         course_id
     FROM enrolments
-    WHERE created_at > '2024-01-01'
+    WHERE created_at > DATE '2024-01-01'
 )
+
 SELECT *
 FROM active_students
 INNER JOIN recent_enrolments
@@ -264,7 +271,7 @@ INNER JOIN recent_enrolments
 
 ## Use one space between all language tokens
 
-Always use exactly one space between language tokens: before and after operators (`=`, `>`, `<`, `!=`, ...) and after commas. Never crowd tokens together or add extra padding spaces to align values across lines.
+Always use exactly one space between language tokens: before and after operators (`=`, `>`, `<`, `!=`, ...) and after commas. Never crowd tokens together or add extra padding spaces. The only exceptions are aligning `AS` keywords in a `SELECT` list (see [Align `AS` keywords](aliasing.md#align-as-keywords)) and aligning column definitions in `CREATE TABLE`.
 
 ##### Example
 
@@ -272,10 +279,10 @@ Bad:
 ```sql
 SELECT
     full_name,
-    cohort+1   AS next_cohort,
-    score*0.1  AS weighted_score
+    cohort+1 AS next_cohort,
+    score*0.1 AS weighted_score
 FROM students
-WHERE 
+WHERE
     cohort>2024
     AND is_active=true
 ```
@@ -284,10 +291,10 @@ Good:
 ```sql
 SELECT
     full_name,
-    cohort + 1 AS next_cohort,
+    cohort + 1  AS next_cohort,
     score * 0.1 AS weighted_score
 FROM students
-WHERE 
+WHERE
     cohort > 2024
     AND is_active IS true
 ```
@@ -340,7 +347,7 @@ Bad:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     cohort > 2024 AND
     is_active IS true AND
     school_urn IS NOT NULL
@@ -350,7 +357,7 @@ Good:
 ```sql
 SELECT *
 FROM students
-WHERE 
+WHERE
     cohort > 2024
     AND is_active IS true
     AND school_urn IS NOT NULL
@@ -390,43 +397,45 @@ FROM courses;
 
 ## Use blank lines between logically distinct sections
 
-Leave a blank line between logically distinct sections of code, such as between CTEs, or between groups of related conditions in a long `WHERE` clause. This follows general coding best practices.
+Leave a blank line between logically distinct sections of code, such as between CTEs, between groups of related columns in a `SELECT` list, or between groups of related conditions in a long `WHERE` clause. This follows general coding best practices.
 
 ##### Example
 
 Bad:
 ```sql
-WITH active_students AS (
-    SELECT id, full_name
-    FROM students
-    WHERE is_active IS true
-)
 SELECT
-    active_students.full_name,
-    count(enrolments.course_id) AS total_courses
-FROM active_students
-INNER JOIN enrolments 
-    ON active_students.id = enrolments.student_id
-GROUP BY active_students.full_name
+    students.id,
+    students.first_name || ' ' || students.last_name                  AS full_name,
+    extract(YEAR FROM students.enrolled_at)                           AS enrolment_year,
+    students.cohort,
+    assessments.exam_score * 0.6 + assessments.coursework_score * 0.4 AS final_grade,
+    coalesce(assessments.retake_count, 0)                             AS retake_count,
+    CASE
+        WHEN assessments.exam_score >= 50 THEN 'Pass'
+        ELSE 'Fail'
+    END AS exam_result
+FROM students
+INNER JOIN assessments
+    ON students.id = assessments.student_id
 ```
 
 Good:
 ```sql
-WITH active_students AS (
-    SELECT
-        id,
-        full_name
-    FROM students
-    WHERE is_active IS true
-)
-
 SELECT
-    active_students.full_name,
-    count(enrolments.course_id) AS total_courses
-FROM active_students
-INNER JOIN enrolments
-    ON active_students.id = enrolments.student_id
-GROUP BY active_students.full_name
+    students.id,
+    students.first_name || ' ' || students.last_name                  AS full_name,
+    extract(YEAR FROM students.enrolled_at)                           AS enrolment_year,
+    students.cohort,
+
+    assessments.exam_score * 0.6 + assessments.coursework_score * 0.4 AS final_grade,
+    coalesce(assessments.retake_count, 0)                             AS retake_count,
+    CASE
+        WHEN assessments.exam_score >= 50 THEN 'Pass'
+        ELSE 'Fail'
+    END AS exam_result
+FROM students
+INNER JOIN assessments
+    ON students.id = assessments.student_id
 ```
 
 #### Source breakdown
