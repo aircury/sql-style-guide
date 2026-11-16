@@ -214,9 +214,7 @@ SELECT
     student_id,
     course_id
 FROM enrolments
-GROUP BY
-    student_id,
-    course_id
+GROUP BY student_id, course_id
 ```
 
 Good:

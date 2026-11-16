@@ -51,9 +51,7 @@ SELECT
     email
 FROM students
 WHERE cohort > 2024
-GROUP BY
-    full_name,
-    email
+GROUP BY full_name, email
 ```
 
 #### Source breakdown
@@ -62,27 +60,36 @@ GROUP BY
  - **Against (0)**
  - **Not mentioned (2)**: Celko, Supabase.
 
-## *Proposal* Place arguments below the clause arguments
+## Place `SELECT` and `WHERE` arguments below the keyword
 
-If a clause has only one argument, it may share the line with the root keyword. If it has multiple arguments, each must be on its own line, including the first. 
+In `SELECT` and `WHERE`, if the clause has only one argument, it may share the line with the keyword. If it has multiple arguments, each must be on its own line below the keyword, indented one level, including the first.
+
+Other clauses (`FROM`, `GROUP BY`, `HAVING`, `ORDER BY`, ...) keep their arguments on the same line as the keyword (`GROUP BY cohort, school_urn`).
 
 ##### Example
 
 Bad:
 ```sql
-SELECT full_name, email, cohort
+SELECT cohort, count(*) AS total_students
 FROM students
-WHERE cohort > 2024
+WHERE cohort > 2024 AND is_active IS true
+GROUP BY
+    cohort
+HAVING
+    count(*) > 10
 ```
 
 Good:
 ```sql
 SELECT
-    full_name,
-    email,
-    cohort
+    cohort,
+    count(*) AS total_students
 FROM students
-WHERE cohort > 2024
+WHERE
+    cohort > 2024
+    AND is_active IS true
+GROUP BY cohort
+HAVING count(*) > 10
 ```
 
 Good (single argument sharing the line):
@@ -400,8 +407,7 @@ SELECT
 FROM active_students
 INNER JOIN enrolments 
     ON active_students.id = enrolments.student_id
-GROUP BY 
-    active_students.full_name
+GROUP BY active_students.full_name
 ```
 
 Good:
@@ -420,8 +426,7 @@ SELECT
 FROM active_students
 INNER JOIN enrolments
     ON active_students.id = enrolments.student_id
-GROUP BY 
-    active_students.full_name
+GROUP BY active_students.full_name
 ```
 
 #### Source breakdown
