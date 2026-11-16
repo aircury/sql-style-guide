@@ -42,7 +42,7 @@ Besides, avoid abbreviations unless they are commonly understood (for example, o
 
 Generic column names such as `id`, `name` or `type` are allowed inside their own table, as the table already states what they identify: use `users.id`, not `users.user_id`. Prefixing them repeats the table name and makes the column look like a reference to another table. Foreign keys do carry the referenced entity as a prefix (`courses.user_id`), so joins read naturally: `ON courses.user_id = users.id`.
 
-When selecting a generic column, always give it a meaningful alias in `table_column` form (`users.id AS user_id`, `courses.name AS course_name`), keeping the `AS` keywords aligned. This keeps the result set unambiguous.
+When selecting a generic column, always give it a meaningful alias in `table_column` form (`users.id AS user_id`, `courses.name AS course_name`). This keeps the result set unambiguous.
 
 ##### Example
 
@@ -56,7 +56,7 @@ SELECT
     tbl_courses.cohort
 FROM enrolments
 INNER JOIN tbl_courses
-    ON enrolments.course_id = tbl_courses.course_id	
+    ON enrolments.course_id = tbl_courses.course_id
 ```
 
 Good:
@@ -69,7 +69,7 @@ SELECT
     courses.cohort
 FROM enrolments
 INNER JOIN courses
-    ON enrolments.course_id = courses.id	
+    ON enrolments.course_id = courses.id
 ```
 
 #### Source breakdown
@@ -108,7 +108,7 @@ Use only lowercase alphanumeric characters for names separated by underscores, b
 Bad:
 ```sql
 CREATE TABLE "Enrolments" (
-    1st_grade     NUMERIC(4,2),
+    1st_grade     NUMERIC(4, 2),
     student__name VARCHAR,
     course_id_    INTEGER,
     "Is Active"   BOOLEAN,
@@ -119,7 +119,7 @@ CREATE TABLE "Enrolments" (
 Good:
 ```sql
 CREATE TABLE enrolments (
-    final_grade  NUMERIC(4,2),
+    first_grade  NUMERIC(4, 2),
     student_name VARCHAR,
     course_id    INTEGER,
     is_active    BOOLEAN,
@@ -146,7 +146,7 @@ Regarding quoted identifiers:
 
 ### Do not use reserved words as identifiers
 
-Never use words such as `sum`, `count`, ... It will have to be quoted everywhere it is used or it will fail.
+Never use words such as `sum`, `count`, ... They have to be quoted everywhere they are used, or the query fails.
 
 ##### Example
 
@@ -241,7 +241,7 @@ A column holds one value per row, so using singular reflects that. An exception 
 Bad:
 ```sql
 CREATE TABLE students (
-    id        INTEGER PRIMARY KEY, 
+    id        INTEGER PRIMARY KEY,
     full_name VARCHAR,
     absences  INTEGER
 )
@@ -250,7 +250,7 @@ CREATE TABLE students (
 Good:
 ```sql
 CREATE TABLE students (
-    id            INTEGER PRIMARY KEY, 
+    id            INTEGER PRIMARY KEY,
     full_name     VARCHAR,
     absence_count INTEGER
 )
@@ -262,7 +262,7 @@ CREATE TABLE students (
  - **Against (0)**
  - **Not mentioned (5)**: Brooklyn, GitLab, Mozilla, Mazur, PG.ai.
 
-### *Details to discuss* Use standardised prefixes and suffixes
+### Use standardised prefixes and suffixes
 
 Use standardised prefixes and suffixes to convey meaning, making them understandable without the need to inspect their values and data types. 
 
@@ -270,7 +270,7 @@ A non comprehensive list of some standard prefixes and suffixes is as follows:
 
 | Prefix/Suffix | Meaning |
 | ------------- | ------- |
-| `_id`         | An unique identifier (some key) |
+| `_id`         | A unique identifier (some key) |
 | `_status`     | A flag or status |
 | `_total`, `total_` | Total or sum of values |
 | `_name`       | A name |
@@ -282,7 +282,7 @@ A non comprehensive list of some standard prefixes and suffixes is as follows:
 | `_eur`, `_ms` | Numeric unit of the data (seconds, litres, ...) |
 | `_month`, `_day` | Specific part of a date |
 
-Where sources differ and should be discussed is in the use of `_id`. Some state that tables should never contain bare `id` columns, as they are vague and make the naming inconsistent (`courses.id` as the primary key and `xxxx.course_id` as the foreign key). Others state that if a key is a single column, it should be named `id`.
+A table's own single-column primary key is named `id`; the `_id` suffix marks foreign keys and other identifiers (see [Names must be descriptive, consistent and unambiguous](#names-must-be-descriptive-consistent-and-unambiguous)).
 
 ##### Example
 
@@ -320,7 +320,7 @@ For avoiding bare `id` columns:
 
 Do not duplicate the table name in column name. This means two different things:
 1. Do not use the table name as a prefix for a column (no `courses.course_name`).
-2. Do not name a column identically to its table. A complete identical should never happen per previous rules, as tables should be collective/plural and columns singular, but things like `grades.grade` should be avoided.
+2. Do not name a column identically to its table. A fully identical name should never happen per previous rules, as tables should be collective/plural and columns singular, but things like `grades.grade` should be avoided.
 
 ##### Example
 
@@ -328,7 +328,7 @@ Bad:
 ```sql
 CREATE TABLE grades (
     id           INTEGER PRIMARY KEY,
-    grade        NUMERIC(3,1),
+    grade        NUMERIC(3, 1),
     grade_letter VARCHAR(1)
 )
 ```
@@ -337,7 +337,7 @@ Good:
 ```sql
 CREATE TABLE grades (
     id     INTEGER PRIMARY KEY,
-    score  NUMERIC(3,1),
+    score  NUMERIC(3, 1),
     letter VARCHAR(1)
 )
 ```

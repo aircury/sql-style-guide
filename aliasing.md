@@ -34,9 +34,43 @@ GROUP BY students.full_name
  - **Against (0)**
  - **Not mentioned (0)**
 
-## Always use aliasing for aggregated and other column expression
+## Align `AS` keywords
 
-Always use an alias name for columns that are the result of aggregation, `CASE` statements, `sum()`, `count()`, ... Otherwise, depending of the database provider, the name could be inherited from the column used in the transformation or the function name.
+In a `SELECT` list, align the `AS` keywords of consecutive aliased columns: pad each expression so that every `AS` sits one space after the longest aliased expression. Columns without an alias are left as they are, and do not count towards the longest expression. An expression that spans several lines (a broken expression, a multi-line `CASE` or window function) is not aligned either: its `AS` goes one space after the closing line.
+
+Aligned aliases make the names of the result set readable as a single column, and separate what is computed from what it is called.
+
+##### Example
+
+Bad:
+```sql
+SELECT
+    students.full_name AS student_name,
+    count(enrolments.course_id) AS total_courses,
+    max(enrolments.enrolled_at) AS last_enrolled_at,
+    students.cohort
+FROM students
+INNER JOIN enrolments
+    ON students.id = enrolments.student_id
+GROUP BY students.full_name, students.cohort
+```
+
+Good:
+```sql
+SELECT
+    students.full_name          AS student_name,
+    count(enrolments.course_id) AS total_courses,
+    max(enrolments.enrolled_at) AS last_enrolled_at,
+    students.cohort
+FROM students
+INNER JOIN enrolments
+    ON students.id = enrolments.student_id
+GROUP BY students.full_name, students.cohort
+```
+
+## Always use aliasing for aggregated and other column expressions
+
+Always use an alias name for columns that are the result of aggregation, `CASE` expressions, `sum()`, `count()`, ... Otherwise, depending on the database provider, the name could be inherited from the column used in the transformation or the function name.
 
 ##### Example
 
@@ -55,7 +89,7 @@ Good:
 SELECT
     cohort_name,
     count(*)   AS total_students,
-    avg(score) AS grade_avg
+    avg(score) AS average_score
 FROM grades
 GROUP BY cohort_name
 ```
@@ -79,9 +113,9 @@ Never use generic aliases that convey no meaning, such as `x` or `t1`.
 Bad:
 ```sql
 SELECT
-    s.name      AS school_name,
-    sda.name    AS district_name,
-    s.address   AS school_address
+    s.name    AS school_name,
+    sda.name  AS district_name,
+    s.address AS school_address
 FROM schools AS s
 INNER JOIN school_district_areas AS sda
     ON s.district_code = sda.code
@@ -90,9 +124,9 @@ INNER JOIN school_district_areas AS sda
 Good:
 ```sql
 SELECT
-    schools.name      AS school_name,
-    districts.name    AS district_name,
-    schools.address   AS school_address
+    schools.name    AS school_name,
+    districts.name  AS district_name,
+    schools.address AS school_address
 FROM schools
 INNER JOIN school_district_areas AS districts
     ON schools.district_code = districts.code
@@ -126,7 +160,7 @@ Good:
 SELECT
     cohort_name,
     count(*)   AS total_students,
-    avg(score) AS average_scores
+    avg(score) AS average_score
 FROM grades
 GROUP BY cohort_name
 ```
@@ -146,24 +180,24 @@ In queries with multiple tables, always qualify every column reference with its 
 Bad:
 ```sql
 SELECT
-      full_name,
-      email,
-      course_id,
-      enrolled_at
-FROM students  
-INNER JOIN enrolments 
+    full_name,
+    email,
+    course_id,
+    enrolled_at
+FROM students
+INNER JOIN enrolments
     ON students.id = enrolments.student_id
 ```
 
 Good:
 ```sql
 SELECT
-      students.full_name,
-      students.email,
-      enrolments.course_id,
-      enrolments.enrolled_at
-FROM students  
-INNER JOIN enrolments 
+    students.full_name,
+    students.email,
+    enrolments.course_id,
+    enrolments.enrolled_at
+FROM students
+INNER JOIN enrolments
     ON students.id = enrolments.student_id
 ```
 
@@ -182,7 +216,7 @@ In single-table queries, omit the table prefix from column references as they do
 Bad:
 ```sql
 SELECT
-    schools.adress,
+    schools.address,
     schools.urn AS school_urn
 FROM schools
 WHERE schools.cohort > 2024
@@ -191,7 +225,7 @@ WHERE schools.cohort > 2024
 Good:
 ```sql
 SELECT
-    adress,
+    address,
     urn AS school_urn
 FROM schools
 WHERE cohort > 2024
