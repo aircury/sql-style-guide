@@ -1,10 +1,14 @@
 # Aircury's SQL Style Guide
 
-This is the proposed SQL style guide for Aircury.  These guidelines are meant to inform, not dictate. Every project comes with its own constraints: efficiency concerns, business rules, specific contexts... There will be times when following a rule to the letter does more harm than good. Trust your judgement, and don't be afraid to deviate when you have good reason to. Just remember to be consistent throughout your projects with the decisions you make.
+This is Aircury's SQL style guide. These guidelines are meant to inform, not dictate. Every project comes with its own constraints: efficiency concerns, business rules, specific contexts... There will be times when following a rule to the letter does more harm than good. Trust your judgement, and don't be afraid to deviate when you have good reason to. Just remember to be consistent throughout your projects with the decisions you make.
 
-## Proposal considerations
+## How the rules were chosen
 
-Most of the rules come from other SQL style guides, where a decision has been made with some reasoning, and no other guide contradicts it. Those rules are as-is, with no modifications planned. Others, however, come mostly from my opinion or are not a consensus between the guides. Those roles are open and encouraged to be discussed. They will be marked with *Proposal*. Some other times, only part of the rule may be up for discussion. Those will be marked with *Details to discuss*.
+Most of the rules come from other SQL style guides (listed under [Sources](#sources)), where a decision was made with some reasoning and no other guide contradicts it. Where the guides disagreed, or a rule came from our own experience, it was discussed by the team in this repository's issues before being settled. Each rule ends with a source breakdown showing which guides support it, which go against it, and which do not mention it.
+
+## Changing or proposing a rule
+
+The guide is not set in stone. If you think a rule should change, open an issue using the *Rule amendment* or *Rule disagreement* template, explaining what you would change and why. If you think a rule is missing, open an issue using the *Rule proposal* template.
 
 # Rules structure
 

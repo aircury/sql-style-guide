@@ -1,6 +1,6 @@
 ---
 name: Rule disagreement
-about: Issue to start a discussion on a non-proposal rule
+about: Issue to start a discussion on a rule
 title: "[Rule title]"
 labels: disagreement
 assignees: ''

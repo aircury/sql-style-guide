@@ -1,7 +1,7 @@
 ---
 name: Rule amendment
 about: Issue to propose an amendment to a rule
-title: ''
+title: "[Rule title]"
 labels: amendment
 assignees: ''
 
