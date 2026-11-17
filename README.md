@@ -10,6 +10,14 @@ Most of the rules come from other SQL style guides (listed under [Sources](guide
 
 The guide is not set in stone. If you think a rule should change, open an issue using the *Rule amendment* or *Rule disagreement* template, explaining what you would change and why. If you think a rule is missing, open an issue using the *Rule proposal* template.
 
+## Using the guide with AI agents
+
+The guide is packaged as an agent skill ([`guide/SKILL.md`](guide/SKILL.md)). Install it in your project with:
+
+```sh
+npx skills add aircury/sql-style-guide
+```
+
 # Rules structure
 
 See the [guide index](guide/README.md) for the full list of rules.
