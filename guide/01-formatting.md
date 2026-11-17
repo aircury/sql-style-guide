@@ -271,7 +271,7 @@ INNER JOIN recent_enrolments
 
 ## Use one space between all language tokens
 
-Always use exactly one space between language tokens: before and after operators (`=`, `>`, `<`, `!=`, ...) and after commas. Never crowd tokens together or add extra padding spaces. The only exceptions are aligning `AS` keywords in a `SELECT` list (see [Align `AS` keywords](aliasing.md#align-as-keywords)) and aligning column definitions in `CREATE TABLE`.
+Always use exactly one space between language tokens: before and after operators (`=`, `>`, `<`, `!=`, ...) and after commas. Never crowd tokens together or add extra padding spaces. The only exceptions are aligning `AS` keywords in a `SELECT` list (see [Align `AS` keywords](04-aliasing.md#align-as-keywords)) and aligning column definitions in `CREATE TABLE`.
 
 ##### Example
 
